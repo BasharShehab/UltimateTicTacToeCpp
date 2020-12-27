@@ -11,8 +11,9 @@ GlobalBoard game[3][3];
 std::string O = "\u26AA";
 std::string X = "\u274C";
 std::string E = "\u2B1B";
+std::string turn = X;
 
-std::string globalWinner[3][3];
+std::string globalWinner[3][3] = {E, E, E, E, E, E, E, E, E};
 void printGame() {
     int count = 0;
     for (int k = 0; k < 3; k++) {
@@ -32,9 +33,18 @@ void printGame() {
         }
         std::cout << "\n";
     }
-    std::cout << "\n";
 }
 
+void printGameState() {
+    std::cout << "Current game state \n";
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            std::cout << globalWinner[i][j] << " ";
+        }
+        std::cout << "\n";
+    }
+}
 void initialiseLocalBoard(int x, int y) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -44,15 +54,11 @@ void initialiseLocalBoard(int x, int y) {
 }
 
 void initialiseGlobalBoard() {
-    initialiseLocalBoard(0, 0);
-    initialiseLocalBoard(0, 1);
-    initialiseLocalBoard(0, 2);
-    initialiseLocalBoard(1, 0);
-    initialiseLocalBoard(1, 1);
-    initialiseLocalBoard(1, 2);
-    initialiseLocalBoard(2, 0);
-    initialiseLocalBoard(2, 1);
-    initialiseLocalBoard(2, 2);
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            initialiseLocalBoard(i, j);
+        }
+    }
 }
 
 void changeBoardChoice(int &boardChoice, int xCoo, int yCoo) {
@@ -75,6 +81,7 @@ void changeBoardChoice(int &boardChoice, int xCoo, int yCoo) {
     else if (xCoo == 2 && yCoo == 2)
         boardChoice = 9;
 }
+
 void checkLocalWinX(int board) {
     int x, y;
     switch (board) {
@@ -116,30 +123,24 @@ void checkLocalWinX(int board) {
             break;
     }
     if (
-        (game[x][y].localBoard[0][0] == X &&
-         game[x][y].localBoard[0][1] == X &&
-         game[x][y].localBoard[0][2] == X) ||
-        (game[x][y].localBoard[1][0] == X &&
-         game[x][y].localBoard[1][1] == X &&
-         game[x][y].localBoard[1][2] == X) ||
-        (game[x][y].localBoard[2][0] == X &&
-         game[x][y].localBoard[2][1] == X &&
-         game[x][y].localBoard[2][2] == X) ||
-        (game[x][y].localBoard[0][0] == X &&
-         game[x][y].localBoard[1][0] == X &&
-         game[x][y].localBoard[2][0] == X) ||
-        (game[x][y].localBoard[0][1] == X &&
-         game[x][y].localBoard[1][1] == X &&
-         game[x][y].localBoard[2][1] == X) ||
-        (game[x][y].localBoard[0][2] == X &&
-         game[x][y].localBoard[1][2] == X &&
-         game[x][y].localBoard[2][2] == X) ||
-        (game[x][y].localBoard[0][0] == X &&
-         game[x][y].localBoard[1][1] == X &&
-         game[x][y].localBoard[2][2] == X) ||
-        (game[x][y].localBoard[0][2] == X &&
-         game[x][y].localBoard[1][1] == X &&
-         game[x][y].localBoard[2][0] == X))
+
+        (game[x][y].localBoard[0][0] == X && game[x][y].localBoard[0][1] == X && game[x][y].localBoard[0][2] == X) ||
+
+        (game[x][y].localBoard[1][0] == X && game[x][y].localBoard[1][1] == X && game[x][y].localBoard[1][2] == X) ||
+
+        (game[x][y].localBoard[2][0] == X && game[x][y].localBoard[2][1] == X && game[x][y].localBoard[2][2] == X) ||
+
+        (game[x][y].localBoard[0][0] == X && game[x][y].localBoard[1][0] == X && game[x][y].localBoard[2][0] == X) ||
+
+        (game[x][y].localBoard[0][1] == X && game[x][y].localBoard[1][1] == X && game[x][y].localBoard[2][1] == X) ||
+
+        (game[x][y].localBoard[0][2] == X && game[x][y].localBoard[1][2] == X && game[x][y].localBoard[2][2] == X) ||
+
+        (game[x][y].localBoard[0][0] == X && game[x][y].localBoard[1][1] == X && game[x][y].localBoard[2][2] == X) ||
+
+        (game[x][y].localBoard[0][2] == X && game[x][y].localBoard[1][1] == X && game[x][y].localBoard[2][0] == X)
+
+    )
         globalWinner[x][y] = X;
 }
 
@@ -183,69 +184,85 @@ void checkLocalWinO(int board) {
             y = 2;
             break;
     }
+
     if (
-        (game[x][y].localBoard[0][0] == O &&
-         game[x][y].localBoard[0][1] == O &&
-         game[x][y].localBoard[0][2] == O) ||
-        (game[x][y].localBoard[1][0] == O &&
-         game[x][y].localBoard[1][1] == O &&
-         game[x][y].localBoard[1][2] == O) ||
-        (game[x][y].localBoard[2][0] == O &&
-         game[x][y].localBoard[2][1] == O &&
-         game[x][y].localBoard[2][2] == O) ||
-        (game[x][y].localBoard[0][0] == O &&
-         game[x][y].localBoard[1][0] == O &&
-         game[x][y].localBoard[2][0] == O) ||
-        (game[x][y].localBoard[0][1] == O &&
-         game[x][y].localBoard[1][1] == O &&
-         game[x][y].localBoard[2][1] == O) ||
-        (game[x][y].localBoard[0][2] == O &&
-         game[x][y].localBoard[1][2] == O &&
-         game[x][y].localBoard[2][2] == O) ||
-        (game[x][y].localBoard[0][0] == O &&
-         game[x][y].localBoard[1][1] == O &&
-         game[x][y].localBoard[2][2] == O) ||
-        (game[x][y].localBoard[0][2] == O &&
-         game[x][y].localBoard[1][1] == O &&
-         game[x][y].localBoard[2][0] == O))
+
+        (game[x][y].localBoard[0][0] == O && game[x][y].localBoard[0][1] == O && game[x][y].localBoard[0][2] == O) ||
+
+        (game[x][y].localBoard[1][0] == O && game[x][y].localBoard[1][1] == O && game[x][y].localBoard[1][2] == O) ||
+
+        (game[x][y].localBoard[2][0] == O && game[x][y].localBoard[2][1] == O && game[x][y].localBoard[2][2] == O) ||
+
+        (game[x][y].localBoard[0][0] == O && game[x][y].localBoard[1][0] == O && game[x][y].localBoard[2][0] == O) ||
+
+        (game[x][y].localBoard[0][1] == O && game[x][y].localBoard[1][1] == O && game[x][y].localBoard[2][1] == O) ||
+
+        (game[x][y].localBoard[0][2] == O && game[x][y].localBoard[1][2] == O && game[x][y].localBoard[2][2] == O) ||
+
+        (game[x][y].localBoard[0][0] == O && game[x][y].localBoard[1][1] == O && game[x][y].localBoard[2][2] == O) ||
+
+        (game[x][y].localBoard[0][2] == O && game[x][y].localBoard[1][1] == O && game[x][y].localBoard[2][0] == O)
+
+    )
         globalWinner[x][y] = O;
+
+    // for (int i; i < 3; i++) {
+    //     if ((game[x][y].localBoard[i][0] == game[x][y].localBoard[i][1]) && (game[x][y].localBoard[i][1] == game[x][y].localBoard[i][2])) {
+    //         globalWinner[x][y] == game[x][y].localBoard[i][1];
+    //     }
+
+    //     if ((game[x][y].localBoard[0][i] == game[x][y].localBoard[1][i]) && (game[x][y].localBoard[1][i] == game[x][y].localBoard[2][i])) {
+    //         globalWinner[x][y] == game[x][y].localBoard[1][i];
+    //     }
+    // }
+
+    // if (
+    //     (
+    //         (game[x][y].localBoard[0][0] == game[x][y].localBoard[1][1]) && (game[x][y].localBoard[1][1]) == game[x][y].localBoard[2][2])
+
+    //     || ((game[x][y].localBoard[0][2] == game[x][y].localBoard[1][1]) && (game[x][y].localBoard[1][1]) == game[x][y].localBoard[2][0]))
+
+    // {
+    //     globalWinner[x][y] = game[x][y].localBoard[1][1];
+    // }
 }
 
-void checkGlobalWinX(std::string &gameState) {
+void checkGlobalWin(std::string &turn) {
     if (
-        ((globalWinner[0][0] == X &&
-          globalWinner[0][1] == X &&
-          globalWinner[0][2] == X) ||
-         (globalWinner[1][0] == X &&
-          globalWinner[1][1] == X &&
-          globalWinner[1][2] == X) ||
-         (globalWinner[2][0] == X &&
-          globalWinner[2][1] == X &&
-          globalWinner[2][2] == X) ||
-         (globalWinner[0][0] == X &&
-          globalWinner[1][0] == X &&
-          globalWinner[2][0] == X) ||
-         (globalWinner[0][1] == X &&
-          globalWinner[1][1] == X &&
-          globalWinner[2][1] == X) ||
-         (globalWinner[0][2] == X &&
-          globalWinner[1][2] == X &&
-          globalWinner[2][2] == X) ||
-         (globalWinner[0][0] == X &&
-          globalWinner[1][1] == X &&
-          globalWinner[2][2] == X) ||
-         (globalWinner[0][2] == X &&
-          globalWinner[1][1] == X &&
-          globalWinner[2][0] == X))) {
-        gameState = X;
+
+        (globalWinner[0][0] == turn && globalWinner[0][1] == turn && globalWinner[0][2] == turn) ||
+
+        (globalWinner[1][0] == turn && globalWinner[1][1] == turn && globalWinner[1][2] == turn) ||
+
+        (globalWinner[2][0] == turn && globalWinner[2][1] == turn && globalWinner[2][2] == turn) ||
+
+        (globalWinner[0][0] == turn && globalWinner[1][0] == turn && globalWinner[2][0] == turn) ||
+
+        (globalWinner[0][1] == turn && globalWinner[1][1] == turn && globalWinner[2][1] == turn) ||
+
+        (globalWinner[0][2] == turn && globalWinner[1][2] == turn && globalWinner[2][2] == turn) ||
+
+        (globalWinner[0][0] == turn && globalWinner[1][1] == turn && globalWinner[2][2] == turn) ||
+
+        (globalWinner[0][2] == turn && globalWinner[1][1] == turn && globalWinner[2][0] == turn)
+
+    ) {
+        gameState = turn;
     }
 }
 
-void playerX(int &boardChoice, int xCoo, int yCoo) {
+void switchTurns() {
+    if (turn == X) {
+        turn = O;
+    } else {
+        turn = X;
+    }
+}
+void player(int &boardChoice, int xCoo, int yCoo, std::string &turn) {
     switch (boardChoice) {
         case 1:
             if (game[0][0].localBoard[xCoo][yCoo] == E)
-                game[0][0].localBoard[xCoo][yCoo] = X;
+                game[0][0].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -253,12 +270,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 2:
             if (game[0][1].localBoard[xCoo][yCoo] == E)
-                game[0][1].localBoard[xCoo][yCoo] = X;
+                game[0][1].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -266,12 +283,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 3:
             if (game[0][2].localBoard[xCoo][yCoo] == E)
-                game[0][2].localBoard[xCoo][yCoo] = X;
+                game[0][2].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -279,12 +296,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 4:
             if (game[1][0].localBoard[xCoo][yCoo] == E)
-                game[1][0].localBoard[xCoo][yCoo] = X;
+                game[1][0].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -292,12 +309,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 5:
             if (game[1][1].localBoard[xCoo][yCoo] == E)
-                game[1][1].localBoard[xCoo][yCoo] = X;
+                game[1][1].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -305,12 +322,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 6:
             if (game[1][2].localBoard[xCoo][yCoo] == E)
-                game[1][2].localBoard[xCoo][yCoo] = X;
+                game[1][2].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -318,12 +335,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 7:
             if (game[2][0].localBoard[xCoo][yCoo] == E)
-                game[2][0].localBoard[xCoo][yCoo] = X;
+                game[2][0].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -331,12 +348,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 8:
             if (game[2][1].localBoard[xCoo][yCoo] == E)
-                game[2][1].localBoard[xCoo][yCoo] = X;
+                game[2][1].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -344,12 +361,12 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
         case 9:
             if (game[2][2].localBoard[xCoo][yCoo] == E)
-                game[2][2].localBoard[xCoo][yCoo] = X;
+                game[2][2].localBoard[xCoo][yCoo] = turn;
             else {
                 std::cout << "Please choose an empty space\n";
                 int x, y;
@@ -357,146 +374,21 @@ void playerX(int &boardChoice, int xCoo, int yCoo) {
                 std::cin >> x;
                 std::cout << "Enter the Y coordinates where you want to place X\n";
                 std::cin >> y;
-                playerX(boardChoice, x, y);
+                player(boardChoice, x, y, turn);
             }
             break;
     }
+    switchTurns();
     changeBoardChoice(boardChoice, xCoo, yCoo);
     printGame();
-    checkLocalWinX(boardChoice);
-}
-
-void playerO(int &boardChoice, int xCoo, int yCoo) {
-    switch (boardChoice) {
-        case 1:
-            if (game[0][0].localBoard[xCoo][yCoo] == E)
-                game[0][0].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 2:
-            if (game[0][1].localBoard[xCoo][yCoo] == E)
-                game[0][1].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 3:
-            if (game[0][2].localBoard[xCoo][yCoo] == E)
-                game[0][2].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 4:
-            if (game[1][0].localBoard[xCoo][yCoo] == E)
-                game[1][0].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 5:
-            if (game[1][1].localBoard[xCoo][yCoo] == E)
-                game[1][1].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 6:
-            if (game[1][2].localBoard[xCoo][yCoo] == E)
-                game[1][2].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 7:
-            if (game[2][0].localBoard[xCoo][yCoo] == E)
-                game[2][0].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 8:
-            if (game[2][1].localBoard[xCoo][yCoo] == E)
-                game[2][1].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-        case 9:
-            if (game[2][2].localBoard[xCoo][yCoo] == E)
-                game[2][2].localBoard[xCoo][yCoo] = O;
-            else {
-                std::cout << "Please choose an empty space\n";
-                int x, y;
-                std::cout << "Enter the X coordinates where you want to place O\n";
-                std::cin >> x;
-                std::cout << "Enter the Y coordinates where you want to place O\n";
-                std::cin >> y;
-                playerO(boardChoice, x, y);
-            }
-            break;
-    }
-    changeBoardChoice(boardChoice, xCoo, yCoo);
-    printGame();
-    checkLocalWinO(boardChoice);
 }
 
 int main(int argc, char *argv[]) {
     int boardChoice, x, y;
+    int previousBoard;
     std::cout << "\n";
     initialiseGlobalBoard();
     printGame();
-    std::cout << "\n";
 
     std::cout << "Player X Starts!\n";
     std::cout << "Choose starting board : \n";
@@ -519,9 +411,16 @@ int main(int argc, char *argv[]) {
             std::cout << "Enter the Y coordinates where you want to place X\n";
             std::cin >> y;
         }
-        playerX(boardChoice, x, y);
-        checkGlobalWinX(gameState);
+        previousBoard = boardChoice;
+        player(boardChoice, x, y, turn);
 
+        checkLocalWinX(previousBoard);
+        checkLocalWinO(previousBoard);
+        checkGlobalWin(turn);
+
+        printGameState();
+
+        if (gameState == X) break;
         std::cin.clear();
         std::cout << "Board #" << boardChoice << std::endl;
 
@@ -536,22 +435,16 @@ int main(int argc, char *argv[]) {
             std::cout << "Enter the Y coordinates where you want to place O\n";
             std::cin >> y;
         }
-        playerO(boardChoice, x, y);
-        checkGlobalWinX(gameState);
+
+        previousBoard = boardChoice;
+        player(boardChoice, x, y, turn);
+        checkLocalWinX(previousBoard);
+        checkLocalWinO(previousBoard);
+        checkGlobalWin(turn);
+        printGameState();
+        if (gameState == O) break;
 
         std::cin.clear();
-        std::cout << "global";
-
-        checkLocalWinX(boardChoice);
-        checkLocalWinO(boardChoice);
-        std::cout << "global";
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                std::cout << globalWinner[i][j];
-            }
-            std::cout << "\n";
-        }
     }
-
     std::cout << "Winner is : " << gameState << std::endl;
 }
