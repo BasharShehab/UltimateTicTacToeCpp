@@ -12,7 +12,13 @@ std::string O = "\u26AA";
 std::string X = "\u274C";
 std::string E = "\u2B1B";
 std::string turn = X;
-
+void switchTurns() {
+    if (turn == X) {
+        turn = O;
+    } else {
+        turn = X;
+    }
+}
 std::string globalWinner[3][3] = {E, E, E, E, E, E, E, E, E};
 void printGame() {
     int count = 0;
@@ -251,13 +257,6 @@ void checkGlobalWin(std::string &turn) {
     }
 }
 
-void switchTurns() {
-    if (turn == X) {
-        turn = O;
-    } else {
-        turn = X;
-    }
-}
 void player(int &boardChoice, int xCoo, int yCoo, std::string &turn) {
     switch (boardChoice) {
         case 1:
